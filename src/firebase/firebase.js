@@ -1,12 +1,13 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
     const config = {
-        apiKey: "AIzaSyAq7WjAzAJ66ENwUo1B6EzOMRWWR6E3BSM",
-        authDomain: "get-ready-investments.firebaseapp.com",
-        databaseURL: "https://get-ready-investments.firebaseio.com",
-        projectId: "get-ready-investments",
-        storageBucket: "get-ready-investments.appspot.com",
-        messagingSenderId: "206127445708"
+    apiKey: "AIzaSyATnH54OeLn-T1c3D_clH2lo2FFz4IHRQA",
+    authDomain: "p2ptraders-app.firebaseapp.com",
+    databaseURL: "https://p2ptraders-app.firebaseio.com",
+    projectId: "p2ptraders-app",
+    storageBucket: "p2ptraders-app.appspot.com",
+    messagingSenderId: "339827645019"
+
     };
 
 

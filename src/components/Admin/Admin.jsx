@@ -8,7 +8,12 @@ import * as app_constants from '../../constants/program_constants';
 
 import Profile from '../Profiles/Profile';
 import ProfileLists from '../PublicProfiles/PublicProfiles';
-
+import SignOutButton from "../User/SignOut/SignOut";
+import Messages from "../Messages/Messages";
+import {
+    firebase, auth
+} from '../../firebase'; 
+import SignInPage from '../User/SignIn/SignIn';
 class Admin extends Component{
     constructor(){
         super();
@@ -19,6 +24,8 @@ class Admin extends Component{
             load_friends_profiles : false,
             load_messages : false,
             load_wallet : false,
+            load_signout: false,
+            isUserLoggedIn : true,
         }
 
         this.onShow = this.onShow.bind(this);
@@ -34,6 +41,7 @@ class Admin extends Component{
                 load_friends_profiles: false,
                 load_messages: false,
                 load_wallet: false,
+                load_signout: false
 
             }); break;
 
@@ -43,6 +51,7 @@ class Admin extends Component{
                 load_friends_profiles: false,
                 load_messages: false,
                 load_wallet: false,
+                load_signout: false
             });break;
 
             case 'friendsprofiles': this.setState({
@@ -51,6 +60,7 @@ class Admin extends Component{
                 load_friends_profiles: true,
                 load_messages: false,
                 load_wallet: false,
+                load_signout: false
             });break;
             case 'messages': this.setState({
                 load_my_profile: false,
@@ -58,6 +68,7 @@ class Admin extends Component{
                 load_friends_profiles: false,
                 load_messages: true,
                 load_wallet: false,
+                load_signout: false
             }); break;
             case 'wallet': this.setState({
                 load_my_profile: false,
@@ -65,56 +76,79 @@ class Admin extends Component{
                 load_friends_profiles: false,
                 load_messages: false,
                 load_wallet: true,
+                load_signout: false
             }); break;
+
+            case "signout" : this.setState(
+                {
+                    load_my_profile: false,
+                    load_public_profiles: false,
+                    load_friends_profiles: false,
+                    load_messages: false,
+                    load_wallet: false,
+                    load_signout: true
+                }
+            );break;
 
 
             default:break;
         }
-
-
     }
-
-
     render(){
-        return(
-        <div className="admin">
-            <div className="box box-body">
-                <Intro heading={app_constants.app_name} slogan={app_constants.app_descrition} />
 
-                <div className="box box-header">
-                    <h3 className="box-title"> Admin </h3>
-                </div>
+        let isUserLoggedIn = ((firebase.auth.currentUser !== "") && (firebase.auth.currentUser  !== null ));
 
-                <div className="row">
-                    <div className="col-md-3">
-                        <div className="box box-primary">
-                            <ol className="list-group">
-                                    <li className="list-group-item"><button className="btn btn-primary btn-block" name="myprofile" onClick={e => this.onShow(e)}> My Profile </button></li>
-                                    <li className="list-group-item"><button className="btn btn-primary btn-block" name="publicprofiles" onClick={e => this.onShow(e)}> Public Profiles </button></li>
-                                    <li className="list-group-item"><button className="btn btn-primary btn-block" name="friendsprofiles" onClick={e => this.onShow(e)}> Friends Profiles </button></li>
-                                    <li className="list-group-item"><button className="btn btn-primary btn-block" name="messages" onClick={e => this.onShow(e)}> Messages </button></li>
-                                    <li className="list-group-item"><button className="btn btn-primary btn-block" name="wallet" onClick={e => this.onShow(e)}> Wallet </button></li>
-                            </ol>
+        if (isUserLoggedIn){
+                return(
+                        <div className="admin">
+                            <div className="box box-body">
+                                <Intro heading={app_constants.app_name} slogan={app_constants.app_descrition} />
+                                <div className="box box-header">
+                                    <h3 className="box-title"> Admin </h3>                                     
+                                        <button type="button" className="btn btn-warning pull-right" name="signout" onClick={e => this.onShow(e)}><strong>SignOut</strong></button> 
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-3">
+                                        <div className="box box-primary">
+                                            <ol className="list-group">
+                                                    <li className="list-group-item"><button className="btn btn-primary btn-block" name="myprofile" onClick={e => this.onShow(e)}> My Profile </button></li>
+                                                    <li className="list-group-item"><button className="btn btn-primary btn-block" name="publicprofiles" onClick={e => this.onShow(e)}> Public Profiles </button></li>
+                                                    <li className="list-group-item"><button className="btn btn-primary btn-block" name="friendsprofiles" onClick={e => this.onShow(e)}> Friends Profiles </button></li>
+                                                    <li className="list-group-item"><button className="btn btn-primary btn-block" name="messages" onClick={e => this.onShow(e)}> Messages </button></li>
+                                                    <li className="list-group-item"><button className="btn btn-primary btn-block" name="wallet" onClick={e => this.onShow(e)}> Wallet </button></li>
+                                            </ol>
+                                        </div>
+                                    
+                                    </div>
+                                    <div className="col-md-6">
+                                    {
+                                        (this.state.load_my_profile) ? <Profile /> : ""
+                                    }
+                                    {
+                                            (this.state.load_public_profiles) ? <ProfileLists profile_kind="public" /> : ""
+                                    }
+                                    {
+                                            (this.state.load_friends_profiles) ? <ProfileLists profile_kind="friends" /> : ""
+                                    }
+
+                                    {
+                                        (this.state.load_messages) ? <Messages /> : ""
+                                    }
+
+                                    {
+                                        (this.state.load_signout) ? <SignOutButton/> : ""
+                                    }
+                                    </div>
+                                </div>
+
+
+                            </div>
                         </div>
-                    
-                    </div>
-                    <div className="col-md-6">
-                    {
-                        (this.state.load_my_profile) ? <Profile /> : ""
-                    }
-                    {
-                            (this.state.load_public_profiles) ? <ProfileLists profile_kind="public" /> : ""
-                    }
-                    {
-                            (this.state.load_friends_profiles) ? <ProfileLists profile_kind="friends" /> : ""
-                    }
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-        )
+                    )
+            }
+            else{
+            return (<SignInPage message={"Please sign in before using the administration module"} />)
+            }
     }
 }
 

@@ -85,6 +85,11 @@ class SignUpForm extends Component {
 
         return (
             <div className="col-md-6">
+                <div className="box box-header">
+                    <h3 className="box-title"><strong>SignUp</strong></h3>
+                </div>
+
+
             <form className="form-horizontal" onSubmit={this.onSubmit}>
 
             <div className="form-group">
@@ -138,20 +143,9 @@ class SignUpForm extends Component {
 }
 
 
-const SignUpLink = () => {
-    return (
-    <div className="form-group">
-        <blockquote>
-            Don't have an account ?account
-            {' '}
-            <NavLink to={routes.signup}> Sign Up </NavLink>
-        </blockquote>
-    </div>
-    );
-}
+
 
 export default SignUpPage;
 export {
-    SignUpForm,
-    SignUpLink
+    SignUpForm
 };

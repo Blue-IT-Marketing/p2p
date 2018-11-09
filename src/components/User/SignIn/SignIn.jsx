@@ -4,18 +4,67 @@ import './signin.css';
 import Intro from '../../Intro/Intro';
 import { withRouter } from 'react-router-dom';
 
-import { SignUpLink } from '../Signup/Signup';
+import {  SignUpForm  } from '../Signup/Signup';
 import { auth } from '../../../firebase';
 import * as routes from '../../../constants/routes';
+import * as app_constants from '../../../constants/program_constants';
 
 
-const SignInPage = (props) => {
+class SignInPage extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            showsignIn : true,
+            signupText : 'SignUp',
+            
+
+        }
+
+        this.showSignUp = this.showSignUp.bind(this);
+        
+    }
+
+    showSignUp(e){
+
+        let prevState = this.state.showsignIn;
+        switch(prevState){
+            case true : this.setState({
+                showsignIn: !prevState,
+                signupText: 'SignIn',
+                
+            });break;
+            case false: this.setState({
+                showsignIn: !prevState,
+                signupText: 'SignUp',
+                
+            });break;
+            default: break;
+        }
+        
+    }
+
+    returnStyles(styles){
+        let all_styles = "";
+        styles.forEach((style) => {
+            if (all_styles === ""){
+                all_styles = style;
+            }else{
+                all_styles += " " + style;
+            }
+        });
+        return all_styles;
+    }
+
+
+    render(){
+
+    
 
     return (
 
         <div className="sign-in">
 
-            <Intro />
+            <Intro heading={app_constants.app_name} slogan={app_constants.app_descrition} />
 
             <div className="row">
                 <div className="col-lg-3">
@@ -25,21 +74,26 @@ const SignInPage = (props) => {
                         <h3 className="box-title"> Login </h3>                        
                     </div>
                 </div>
-
-
+                    <button className="btn btn-info btn-block" onClick={e => this.showSignUp(e)}> <strong>{this.state.signupText}</strong></button>                    
                 </div>
-
                 <div className="col-lg-9">
                     <div className="box box-body">
-                        <SignInForm history={props.history} />
-                        <SignUpLink />            
+                    {
+                        (this.state.showsignIn) ?
+                            <div>
+                            <SignInForm history={this.props.history} message={this.props.message} />
+                            
+                            </div>
+                            : <SignUpForm />
+
+                    }
                     </div>    
                 
                 </div>
             </div>
 
         </div>
-    )
+    )}
 };
 
 const byPropKey = (propertyName, value) => () => ({
@@ -94,6 +148,13 @@ class SignInForm extends Component {
 
         return (
             <div className="col-lg-6">
+
+            <div className="box box-header">
+                    <h3 className="box-title"><strong>SignIn</strong></h3>
+                    <hr/>
+                    <h4 className="box-title">{this.props.message}</h4>
+
+            </div>
             <form className="form-horizontal" onSubmit={this.onSubmit}>
 
                 <div className="form-group">
@@ -114,7 +175,7 @@ class SignInForm extends Component {
                     />
                 </div>
                 <div className="form-group">
-                    <button disabled={isInvalid} type="submit" className="btn btn-primary btn-block">
+                    <button disabled={isInvalid} type="submit" className="btn btn-success btn-block">
                             <strong>Sign In</strong>
                     </button>
                 </div>

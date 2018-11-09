@@ -23,7 +23,7 @@ const SignOutButton = () =>
                     </div>
                     <form className="form-horizontal">
                         <div className="form-group">
-                            <button className="btn btn-primary btn-block" type="button" onClick={auth.doSignOut}>                    
+                            <button className="btn btn-danger btn-block" type="button" onClick={auth.doSignOut}>                    
                                 Sign Out
                             </button>
                         </div>   

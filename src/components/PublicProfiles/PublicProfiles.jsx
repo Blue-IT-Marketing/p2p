@@ -21,8 +21,8 @@ class ProfileLists extends Component{
     constructor(props){
         super(props);
         this.state = {            
-            owner_profile : profile_details,
-            selected_profile: profile_details,
+            owner_profile : {...profile_details},
+            selected_profile: { ...profile_details },
             profiles_list : [],
             profile_kind: "",
 
@@ -109,7 +109,7 @@ class ProfileLists extends Component{
 
         if (this.props.profile_kind === "friends") {
 
-            let userid = this.state.owner_profile.userid;
+            let userid = firebase.auth.currentUser.uid;
             let load_url = '/profiles/friends/' + userid;
             let response = ""
             let isError = false;
@@ -145,6 +145,8 @@ class ProfileLists extends Component{
     render(){
         // let title;
         let title = (this.props.profile_kind === "public" ? "Public Profiles" : "Friends Profiles");
+        
+        
         return(
             <div className="box">
                 <div className="box box-header">

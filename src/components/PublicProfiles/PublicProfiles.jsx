@@ -52,7 +52,7 @@ class ProfileLists extends Component{
                 owner_profile:owner_profile
             })
         }else{
-            let owner_profile = Object.assign([],this.state.owner_profile);
+            let owner_profile = Object.assign({},this.state.owner_profile);
             owner_profile.userid = userid;
             owner_profile.names = firebase.auth.currentUser.displayName;
             owner_profile.email = firebase.auth.currentUser.email;
@@ -146,7 +146,7 @@ class ProfileLists extends Component{
         // let title;
         let title = (this.props.profile_kind === "public" ? "Public Profiles" : "Friends Profiles");
         
-        
+
         return(
             <div className="box">
                 <div className="box box-header">

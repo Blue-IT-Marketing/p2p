@@ -24,7 +24,7 @@ class Profile extends Component {
     constructor() {
         super();
         this.state = {
-            profile_details :{ ...profile_details},
+            profile_details : {...profile_details},
             form_response : ""
         }
 
@@ -34,7 +34,7 @@ class Profile extends Component {
 
     onChangeHandler(e) {
         console.log(e.target.name + " : " + e.target.value);
-        let profile_details = Object.assign([],this.state.profile_details);
+        let profile_details = Object.assign({},this.state.profile_details);
         
         switch (e.target.name){
             case "profile_name": profile_details.profile_name = e.target.value; break;
@@ -54,7 +54,7 @@ class Profile extends Component {
 
         
         this.setState({
-            profile_details
+            profile_details:profile_details
         });
     }
 
@@ -66,28 +66,33 @@ class Profile extends Component {
         let data = JSON.stringify(this.state.profile_details);
         console.log(data);
 
+        let message = "";
+
         Axios.post(submit_profile_url, "&data=" + data).then(function(response){
             if (response.status === 200){
                 return response.data;
             }
         }).then(function(data){
             let form_response = JSON.parse(data);
-            this.setState({ form_response: form_response.message})
+            message = form_response.message;
         }).catch(function(err){
-            this.setState({ form_response: err.message })
+            message = err.message;
+            
         });
+
+        this.setState({ form_response: message })
     }
 
     componentWillMount(e){
         let userid = firebase.auth.currentUser.uid;
         console.log("User ID " + userid);
         let userdetails_url = '/profiles/'+userid +"/get";
-        let profile_details = Object.assign([], this.state.profile_details);
+        let profile_details = Object.assign({}, this.state.profile_details);
         let isError = false;
         let errMessage = "";
 
         if (userid !== ""){
-            profile_details.userid = userid;
+            profile_details.userid = userid;            
             profile_details.names = firebase.auth.currentUser.displayName;
             console.log(profile_details.names)
             profile_details.email = firebase.auth.currentUser.email;

@@ -205,7 +205,10 @@ class ShowMessagesList extends Component{
     componentWillMount(e){
         let Messages_List = Object.assign([],this.state.Messages_List);
         Messages_List = this.props.Messages_List;
-        this.state.Messages_List = Messages_List
+        
+        this.state.Messages_List = Messages_List;
+        
+
         this.forceUpdate();
     }
 
@@ -346,6 +349,10 @@ class Messages extends Component{
 
         let messages_url = '/messages/' + delKey + "/delete";
         let message = "";
+
+        //consider retrying by use of setting flags to indicate if delete was not successfull
+        //also consider storing messages on localstorage for easy retrieval and deleting 
+        
 
         Axios.get(messages_url).then(function(response){
             if (response.status === 200){

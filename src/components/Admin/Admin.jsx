@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import "./Admin.css";
 import Intro from "../Intro/Intro";
 import User from "../User/User";
@@ -10,6 +11,7 @@ import Profile from '../Profiles/Profile';
 import ProfileLists from '../PublicProfiles/PublicProfiles';
 import SignOutButton from "../User/SignOut/SignOut";
 import Messages from "../Messages/Messages";
+import Wallet from "../Wallet/Wallet";
 import {
     firebase, auth
 } from '../../firebase'; 
@@ -25,6 +27,7 @@ class Admin extends Component{
             load_messages : false,
             load_wallet : false,
             load_signout: false,
+            load_wallet : false,
             isUserLoggedIn : true,
         }
 
@@ -137,6 +140,9 @@ class Admin extends Component{
 
                                     {
                                         (this.state.load_signout) ? <SignOutButton/> : ""
+                                    }
+                                    {
+                                        (this.state.load_wallet) ? <Wallet /> : ""
                                     }
                                     </div>
                                 </div>

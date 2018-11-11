@@ -732,10 +732,53 @@ class ManageWithdrawals extends Component{
         this.handleWithdrawalChange = this.handleWithdrawalChange.bind(this);
         this.handlerManagerChanger = this.handlerManagerChanger.bind(this);
         this.updateBackEnd = this.updateBackEnd.bind(this);
+        this.updateWithdrawal = this.updateWithdrawal.bind(this);
     }
 
     updateBackEnd(e){
         //update all state values to the backend
+
+    }
+
+    updateWithdrawal(e){
+        let withdrawal_item = Object.assign({},this.state.withdrawal_item);
+        let withdrawal_items_list = Object.assign([],this.state.Withdrawals_List);
+
+        let position = withdrawal_items_list.findIndex(withdrawal => withdrawal.withdrawal_id === withdrawal_item.withdrawal_id);
+        withdrawal_items_list[position] = withdrawal_item;
+        this.setState({
+            withdrawal_item: withdrawal_item,
+            Withdrawals_List:withdrawal_items_list
+        });
+
+        this.updateBackEnd(e);
+        this.forceUpdate();
+    }    
+
+    //this actually delete the withdrawal and update the backend
+    canceWithdrawal(e){
+        let withdrawal_item = Object.assign({}, this.state.withdrawal_item);
+        let withdrawal_items_list = Object.assign([], this.state.Withdrawals_List);
+
+        let position = withdrawal_items_list.findIndex(withdrawal => withdrawal.withdrawal_id === withdrawal_item.withdrawal_id);
+        let buttonsDisabled = false;
+        if (withdrawal_items_list.length === 1){
+            withdrawal_items_list = [];
+            withdrawal_item = "";
+            buttonsDisabled = true;
+        } else{
+            withdrawal_items_list = withdrawal_items_list.splice((position - 1), 1);
+            withdrawal_item = withdrawal_items_list[0];            
+        };
+
+        this.setState({
+            withdrawal_item:withdrawal_item,
+            Withdrawals_List:withdrawal_items_list,
+            buttonsDisabled:buttonsDisabled
+        });
+
+        this.forceUpdate();
+        this.updateBackEnd(e);                        
 
     }
 
@@ -745,64 +788,26 @@ class ManageWithdrawals extends Component{
         this.setState({
             withdrawal_item : selected_withdrawal,
             buttonsDisabled : false
-        })
+        });
+        this.forceUpdate();
 
     };
 
     handlerManagerChanger(e){
 
         switch(e.target.name){
-
             case "date_scheduled":
-                console.log("updating date");
+                alert("you cant change the schedule")
                 break;
             case "withdrawal_amount":
-                try{
-                    let withdrawal_amount = parseInt(e.target.value);
-                    let previous_amount = parseInt(this.state.withdrawal_item.withdrawal_amount);
-                    if (withdrawal_amount > previous_amount){
-                        //new withdrawal amount is greator than previous amount
-                        let additional_amount = withdrawal_amount - previous_amount;
-                        let balance = parseInt(this.state.Wallet.wallet_balance);
-                        if (balance < additional_amount){
-                            //use balance and then zero the wallet
-                            let wallet = Object.assign({},this.state.Wallet);
-                            wallet.wallet_balance = "0";
-
-                            let withdrawal_item = Object.assign({},this.state.withdrawal_item);
-                            let withdrawal_amount = parseInt(withdrawal_item.withdrawal_amount) + balance;
-                            withdrawal_item.withdrawal_amount = withdrawal_amount;
-                            
-                            let withdrawal_items_list = Object.assign([],this.state.Withdrawals_List);
-
-                            let position = withdrawal_items_list.findIndex( thiswithdrawal_item => withdrawal_item.withdrawal_id === withdrawal_item.withdrawal_id);
-                            withdrawal_items_list[position] = withdrawal_item;
-
-
-                            this.setState({
-                                Wallet : wallet,
-                                withdrawal_item: withdrawal_item,
-                                Withdrawals_List : withdrawal_items_list
-                            });
-
-                            this.updateBackEnd();
-
-                        }else{
-                            //subtract additional from wallet balance and then add the remaining balance back to wallet
-                            let 
-
-                        }
-                    }
-
-                }catch{
-
-                }
-
-
+                alert("you cannot change the withdrawal amount");
                 break;
-
             case "withdrawal_method":
-                console.log("withdrawal method changing");
+                let withdrawal_item = Object.assign({},this.state.withdrawal_item);
+                withdrawal_item.withdrawal_method = e.target.value;
+                this.setState({
+                    withdrawal_item:withdrawal_item
+                })
                 break;
 
             default: break;
@@ -893,10 +898,10 @@ class ManageWithdrawals extends Component{
                                 <div className="form-group">
                                     <div className="row">
                                         <div className="col-md-4">
-                                            <button type="button" className="btn btn-app btn-block btn-outline-dark" name="update" disabled={this.state.buttonsDisabled}><strong> <i className="fa fa-save"> </i>  Update Schedule</strong></button>
+                                            <button type="button" className="btn btn-app btn-block btn-outline-dark" name="update" disabled={this.state.buttonsDisabled} onClick={e => this.updateWithdrawal(e)}><strong> <i className="fa fa-save"> </i>  Update Withdrawal</strong></button>
                                         </div>
                                         <div className="col-md-4">
-                                        <button type="button" className="btn btn-app btn-block btn-outline-danger" name="cancel" disabled={this.state.buttonsDisabled}><strong> <i className="fa fa-cut"> </i>  Cancel Schedule</strong></button>
+                                        <button type="button" className="btn btn-app btn-block btn-outline-danger" name="cancel" disabled={this.state.buttonsDisabled} onClick={e => this.canceWithdrawal(e)}><strong> <i className="fa fa-cut"> </i>  Cancel Withdrawal</strong></button>
                                         </div>
                                         <div className="col-md-4">
                                         <button type="button" className="btn btn-app btn-block btn-outline-info" name="sametime" disabled={this.state.buttonsDisabled}><strong> <i className="fa fa-angle-double-up"> </i>  Upgrade to Express </strong></button>
